@@ -1,0 +1,54 @@
+
+ANSWERS
+==========
+
+Exercise 1.1
+----------
+
+* 1.1.1
+We get result like "Count is 100534081 and should be 200000000" since running without syncronization makes the threads overwrite eachother's results, thereby having lost updates. 
+
+* 1.1.2
+With a smaller amount of operations (100) the chance of the threads interfering with each other is smaller.
+I would not consider this software correct, since we can't guarantee anything in regards to order of execution when running concurrent code without syncronization.  
+After running the example many times with counts=200, I finally got "Count is 384 and should be 400" illustrating that the same could happen with counts=100, even though the chance of this happening is even smaller, there's still a chance.  
+
+* 1.1.3
+No, changing the increment to either += or ++ would not change the erronous result, since these operations aren't atomic either, just like count = count + 1. 
+Running with ++ we get smaller counts (no larger than 30 in our tests).
+Running with += we get similar results as when running with count = count + 1. 
+
+* 1.1.4
+We don't know what the final value should be, since the code is not syncronized. 
+The code suggests that the result would be 0, but since there's no syncronization, this cannot be guaranteed.
+We will still lose updates and/or read stale data without syncronization. 
+Tests show results anywhere between "Count is -8802343 and should be 0" and "Count is 9763543 and should be 0".
+
+* 1.1.5
+Running with only decrement being syncronized does not change the result from when running completely without syncronization.
+Running with only increment being syncronized does not change the result from when running completely without syncronization.
+Values for both of these are anywhere between "Count is 1824261 and should be 0" and "Count is -8469785 and should be 0".
+Running with both increment and decrement syncronized gives the expected result 0. 
+In the experiments where either increment or decrement isn't syncronized we still have reads og stale data or lost updates on either operation, resulting in the same results as running completely without syncronization. 
+Race conditions therefore still occur.
+
+
+Exercise 1.2
+----------
+
+* 1.2.1
+Both threads can call the print method simultaneously, thereby printing symbols in the "wrong order".
+In the scenario where one thread is sleeping and has just printed a dash or a line and the other thread then prints either of the two symbols, a double dash or line will occur. 
+
+* 1.2.2 
+Making the print method syncronous would prevent either thread from printing while the other thread is printing, therefore only 
+
+* 1.2.3 
+* 1.2.4
+* 1.2.5
+N/A
+
+Exercise 1.3
+----------
+
+* 1.3.1

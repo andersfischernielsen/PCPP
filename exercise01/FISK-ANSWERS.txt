@@ -3,7 +3,7 @@ ANSWERS
 ==========
 
 Exercise 1.1
-----------
+------------
 
 * 1.1.1
 We get result like "Count is 100534081 and should be 200000000" since running without syncronization makes the threads overwrite eachother's results, thereby having lost updates. 
@@ -34,7 +34,7 @@ Race conditions therefore still occur.
 
 
 Exercise 1.2
-----------
+------------
 
 * 1.2.1
 Both threads can call the print method simultaneously, thereby printing symbols in the "wrong order".
@@ -48,7 +48,57 @@ Making the print method syncronous would prevent either thread from printing whi
 * 1.2.5
 N/A
 
+
 Exercise 1.3
-----------
+------------
 
 * 1.3.1
+Yes, we observe the same behaviour. 
+
+* 1.3.2
+Yes, the thread terminates as expected now. 
+
+* 1.3.3
+No, it does not terminate as expected. 
+The value will not be visible across threads. (?)
+Furthermore, if the get method is not synchronized, then it's still possible to get() the value before it is initialized, and therefore the thread will loop forever. 
+
+
+* 1.3.4
+Making value volatile gives the desired behaviour. 
+(?) Since the MutableInteger does not expose the inner value to other threads, and only modifies it internally through public methods, then we would argue that this is enough.
+
+
+Exercise 1.4
+------------
+
+* 1.4.1
+
+
+
+Exercise 1.5
+------------
+
+* 1.5.1
+
+
+
+Exercise 1.6
+------------
+
+* 1.6.1
+
+
+
+Exercise 1.7
+------------
+
+* 1.7.1
+
+
+
+Exercise 1.8
+------------
+
+* 1.8.1
+

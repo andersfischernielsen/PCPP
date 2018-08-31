@@ -11,10 +11,11 @@ public class TestLocking0 {
       });
     Thread t2 = new Thread(() -> { 
 	for (int i=0; i<count; i++)
-	  m.addStatic(1); 
+	  m.addInstance(1); 
       });
     t1.start(); t2.start();
     try { t1.join(); t2.join(); } catch (InterruptedException exn) { }
+
     System.out.printf("Sum is %f and should be %f%n", m.sum(), 2.0 * count);
   }
 }

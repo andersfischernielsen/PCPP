@@ -95,6 +95,19 @@ Exercise 1.5
 ------------
 
 * 1.5.1
+Sum is 1790827,000000 and should be 2000000,000000
+Sum is 1864322,000000 and should be 2000000,000000
+Sum is 1874701,000000 and should be 2000000,000000
+Sum is 1783576,000000 and should be 2000000,000000
+The Mystery class appears to be non-thread-safe.
+
+* 1.5.2
+When locking on a static method, the locking "happens on" the Class object of the instance. Therefore the ressource accessed belongs to all instances of the class.
+(?) Since we're calling both static and instance methods, the final result will be less than the expected value due to lost updates. 
+(?) We're simply incrementing two "different" values. 
+
+* 1.5.3
+We would not change the Mystery class, and instead consistently use either the static methods (or instance methods with compiler warning on sum()) to ensure that the same shared value is being incremented.
 
 
 

@@ -73,7 +73,22 @@ Exercise 1.4
 ------------
 
 * 1.4.1
+Sequential result:     664579
+java TestCountPrimes  7.63s user 0.06s system 100% cpu 7.621 total
 
+* 1.4.2
+Parallel10 result:     664579
+java TestCountPrimes  11.92s user 0.06s system 371% cpu 3.227 total
+
+The parallel result takes a bit under half the time of the sequential version. 
+
+* 1.4.3
+No, it does not produce the correct result. The result in the first execution was: 663510.
+
+* 1.4.4
+In theory get() does not have to be syncronized since the method isn't used in the multithreaded execution. 
+get() is only called when the final result is fetched. Since increment() is syncronized the final result after the threads have joined will be correct.
+Therefore the single-threaded call to get() after joining will be correct and since it is a single-threaded call, no race conditions occur.
 
 
 Exercise 1.5

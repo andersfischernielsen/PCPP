@@ -13,7 +13,7 @@ public class Exercises {
         final int THREAD_AMOUNT = 10;
         final int AMOUNT = 4999999;
         Thread[] threads = new Thread[THREAD_AMOUNT];
-        final MyAtomicInteger factors = new MyAtomicInteger();
+        AtomicInteger factors = new AtomicInteger();
         int from = 0;
         int to = AMOUNT/THREAD_AMOUNT;
 

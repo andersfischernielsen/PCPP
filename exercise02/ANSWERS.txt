@@ -14,7 +14,7 @@ See MyAtomicInteger.java
 
 * 2.1.3
 `time java Exercises` outputs:
-12.74s user 0.09s system 361% cpu 3.544 total
+11.90s user 0.07s system 366% cpu 3.266 total
 
 * 2.1.4
 No, the addAndGet()-method would not give the expected result, since the increment (+=) operator is not a single atomic operation.
@@ -25,7 +25,9 @@ There is a noticeable difference. The built-in class is faster.
 `time java Exercises` outputs:
 10.48s user 0.07s system 361% cpu 2.923 total
 
+I would say that making the field static would be a good idea, since that ensures that other threads don't see the AtomicInteger in a partially constructed state. 
 
 
 Exercise 2.2
 ------------
+

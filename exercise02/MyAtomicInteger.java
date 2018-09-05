@@ -1,16 +1,15 @@
 class MyAtomicInteger {
     private int value = 0;
-    private Object lock = new Object();
 
     public int addAndGet(int amount) {
-        synchronized (lock) {
+        synchronized (this) {
             value += amount;
             return value;
         }
     }
 
     public int get() {
-        synchronized (lock) {
+        synchronized (this) {
             return value;
         }
     }

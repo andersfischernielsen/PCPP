@@ -16,4 +16,16 @@ See MyAtomicInteger.java
 `time java Exercises` outputs:
 12.74s user 0.09s system 361% cpu 3.544 total
 
+* 2.1.4
+No, the addAndGet()-method would not give the expected result, since the increment (+=) operator is not a single atomic operation.
+We got varying result using a non-synchronized addAndGet call with a volatile private int value, demonstrating that the AtomicInteger isn't atomic. 
 
+* 2.1.5
+There is a noticeable difference. The built-in class is faster.  
+`time java Exercises` outputs:
+10.48s user 0.07s system 361% cpu 2.923 total
+
+
+
+Exercise 2.2
+------------

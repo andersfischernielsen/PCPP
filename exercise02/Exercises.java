@@ -1,3 +1,5 @@
+import java.util.concurrent.atomic.*;
+
 public class Exercises {
     static void exercise2_1() {
         int factors = 0;
@@ -11,7 +13,7 @@ public class Exercises {
         final int THREAD_AMOUNT = 10;
         final int AMOUNT = 4999999;
         Thread[] threads = new Thread[THREAD_AMOUNT];
-        MyAtomicInteger factors = new MyAtomicInteger();
+        final MyAtomicInteger factors = new MyAtomicInteger();
         int from = 0;
         int to = AMOUNT/THREAD_AMOUNT;
 

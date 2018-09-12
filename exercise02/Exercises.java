@@ -1,7 +1,7 @@
 import java.util.concurrent.atomic.*;
 
 public class Exercises {
-    static void exercise2_1() {
+    static void exercise2_2_1() {
         int factors = 0;
         for (int i = 0; i < 4999999; i++) 
             factors += TestCountFactors.countFactors(i);
@@ -9,7 +9,7 @@ public class Exercises {
         System.out.println(String.format("Factors were: %d", factors));
     }
 
-    static void exercise2_3() {
+    static void exercise2_2_3() {
         final int THREAD_AMOUNT = 10;
         final int AMOUNT = 4999999;
         Thread[] threads = new Thread[THREAD_AMOUNT];

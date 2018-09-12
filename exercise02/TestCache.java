@@ -18,6 +18,13 @@ public class TestCache {
     
     long p = 71827636563813227L;
 
+    Factorizer f = new Factorizer();
+    exerciseFactorizer(new Memoizer5<Long,long[]>(f));
+    System.out.println(f.getCount());
+
+
+    //exerciseFactorize(factorizer);
+/*
     print(factorizer.compute(p));
 
     long[] factors = cachingFactorizer.compute(p);
@@ -29,13 +36,38 @@ public class TestCache {
     print(cachingFactorizer.compute(p));
     print(cachingFactorizer.compute(p));
     print(cachingFactorizer.compute(p));
-    print(cachingFactorizer.compute(p));
+    print(cachingFactorizer.compute(p));*/
   }
 
   private static void print(long[] arr) {
     for (long x : arr) 
       System.out.print(" " + x);
     System.out.println();
+  }
+
+  private static void exerciseFactorizer(Computable<Long, long[]> f) {
+    final int threadCount = 16;
+    final long start = 10_000_000_000L, range = 20_000L;
+    
+    Thread[] threads = new Thread[threadCount];
+    for (int t=0; t<threadCount; t++) {
+      long from1 = start, to1 = from1+range, from2 = start+range+t*range/4, to2 = from2+range;
+      threads[t] = new Thread(() -> {
+        try {
+          for (long i=from1; i<to1; i++)
+            f.compute(i);
+
+          for(long i = from2; i <to2; i++)
+            f.compute(i);
+        } catch (InterruptedException e) {e.getMessage();}
+      });
+    }
+    for (int t=0; t<threadCount; t++) 
+      threads[t].start();
+    try {
+      for (int t=0; t<threadCount; t++) 
+        threads[t].join();
+    } catch (InterruptedException exn) { }
   }
 }
 
@@ -243,7 +275,22 @@ class Memoizer5<A, V> implements Computable<A, V> {
   }
 }
 
+class Memoizer0<A, V> implements Computable<A, V> {
+  private final Map<A, V> cache 
+    = new ConcurrentHashMap<A, V>();
+  private final Computable<A, V> c;
+  
+  public Memoizer0(Computable<A, V> c) { this.c = c; }
 
+  public synchronized V computeIfAbsent(final A arg) throws InterruptedException {
+    V result = cache.get(arg);
+    if (result == null) {
+      result = c.compute(arg);
+      cache.put(arg, result);
+    }
+    return result;
+  }
+}
 /**
  * Final implementation of Memoizer using cheap get() followed by
  * atomic putIfAbsent.

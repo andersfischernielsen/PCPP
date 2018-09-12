@@ -1,9 +1,8 @@
 
 ANSWERS
 ==========
-
-(?) = Indicates that I'm unsure of the answer.
-
+Emma Arfelt Kock, ekoc
+Anders Fischer, afin
 
 Exercise 1.1
 ------------

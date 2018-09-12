@@ -13,6 +13,7 @@ Exercise 2.2
 ------------
 
 ### 2.2.1 
+`time java Exercises` outputs:
 6.96s user 0.07s system 100% cpu 7.004 total
 
 ###  2.2.2

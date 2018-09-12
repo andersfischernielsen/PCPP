@@ -60,6 +60,15 @@ See Exercises.java, results were correct.
 Exercise 2.5
 ------------
 
+### 2.5.3
+It is called 163129 times, since threads are not aware that another thread is "working" alreadyand therefore start the same work twice. 
+`time` gives `42.99s user 0.24s system 335% cpu 12.865 total`
+
+### 2.5.5
+It is called 115000 times. Since putIfAbsent is being used, the window of opportunity for another thread to start the same work is gone. 
+`time` gives `25.86s user 1.48s system 250% cpu 10.916 total`
+
+
 
 Exercise 2.6
 ------------

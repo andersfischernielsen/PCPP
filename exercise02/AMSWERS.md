@@ -73,4 +73,4 @@ Since we're locking on a `Long` object and the `++` operation behind-the-scenes 
 Therefore each thread has its own lock object that it increments. If we increase the number of threads, then we "lower" the value that each thread "ends up" with, since they're operating with different locks.
 
 ### 2.6.3
-See TestStaticCounter.java. We just added a `Object` lock and used it instead of syncing on the Long itself. One line added, one line changed. 
+See TestStaticCounter.java. We just added a `Object` lock and used it instead of syncing on the `Long` itself. One line added, one line changed. 

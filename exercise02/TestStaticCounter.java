@@ -5,6 +5,7 @@ public class TestStaticCounter {
     final static int threads = 2;
     final static long ir = 20_000_000;
 
+    final static Object lock = new Object(); // Added this Object lock. 
     static Long count = 0L;
 
     public static void main(String args[] ) {
@@ -13,7 +14,7 @@ public class TestStaticCounter {
             final int me = k;
             t[k] = new Thread( () -> {
                     for(int j=0;j<ir;j++)
-                        synchronized(count)
+                        synchronized(lock) // Used the above lock for sync.
                             {
                                 count++;
                             }

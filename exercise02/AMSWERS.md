@@ -4,6 +4,11 @@ ANSWERS
 
 _Implementation exercises can be found in either their original files as extensions to existing classes, or in Exercises.java._
 
+Exercise 2.1
+------------
+
+
+
 Exercise 2.2
 ------------
 

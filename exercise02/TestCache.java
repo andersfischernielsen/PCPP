@@ -19,7 +19,7 @@ public class TestCache {
     long p = 71827636563813227L;
 
     Factorizer f = new Factorizer();
-    exerciseFactorizer(new Memoizer2<Long,long[]>(f));
+    exerciseFactorizer(new Memoizer5<Long,long[]>(f));
     System.out.println(f.getCount());
 
 
@@ -275,7 +275,22 @@ class Memoizer5<A, V> implements Computable<A, V> {
   }
 }
 
+class Memoizer0<A, V> implements Computable<A, V> {
+  private final Map<A, V> cache 
+    = new ConcurrentHashMap<A, V>();
+  private final Computable<A, V> c;
+  
+  public Memoizer0(Computable<A, V> c) { this.c = c; }
 
+  public synchronized V computeIfAbsent(final A arg) throws InterruptedException {
+    V result = cache.get(arg);
+    if (result == null) {
+      result = c.compute(arg);
+      cache.put(arg, result);
+    }
+    return result;
+  }
+}
 /**
  * Final implementation of Memoizer using cheap get() followed by
  * atomic putIfAbsent.

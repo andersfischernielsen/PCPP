@@ -47,3 +47,8 @@ since we see that the `Memoizer5` with improvements outperform every other `Memo
 Furthermore the other `Memoizer`s (except for `Memoizer1`) perform relatively equal, with `Memoizer2` surprisingly being a bit faster. 
 
 This is due to the fact that we don't do double tests for values in `Memoizer5` as we do in `Memoizer4`. `Memoizer4` may also wastefully create a Future, which is unnecessary. Even though `Memoizer2` has a chance of computing the same thing twice, it is still fast to "dumbly" use a `ConcurrentHashMap` and do less checks. We see that `Memoizer1` is a lot slower than every other `Memoizer`, since everything is synchronized and threads are waiting for locks.
+
+### 3.4.8
+We could test the cache implementations with more threads/cores, bigger input and more overlap. Bigger overlaps in results would test that the cache is hit more often and perhaps show bigger differences between the cache implementations. 
+
+Also, even though we closed everything running on our computers while benchmarking, we still saw fluctuations while running (as if the OS decided to spend time on something else for a split second). Running the benchmarks on a minimal no-GUI linux distro with the minimal number of processes running would be optimal.

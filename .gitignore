@@ -1,6 +1,8 @@
 .DS_STORE
 *.DS_STORE
 
+.vscode
+
 # Compiled class file
 *.class
 

@@ -1,0 +1,20 @@
+# OS:   Mac OS X; 10.13.6; x86_64
+# JVM:  Oracle Corporation; 1.8.0_181
+# CPU:  null; 8 "cores"
+# Date: 2018-09-19T13:51:30+0200
+countSequential                   12104.5 us     268.23         32
+countParallelN      1             12156.3 us     340.47         32
+countParallelN      2              7137.7 us      79.82         64
+countParallelN      3              4990.0 us      51.58         64
+countParallelN      4              4002.9 us      33.63         64
+countParallelN      5              3907.3 us     138.03        128
+countParallelN      6              3629.3 us      73.56        128
+countParallelN      7              3436.1 us     115.97        128
+countParallelN      8              3181.0 us      18.50        128
+countParallelN      9              3245.5 us      32.42        128
+countParallelN     10              3374.5 us      61.86        128
+countParallelN     11              3361.8 us      52.39        128
+countParallelN     12              3353.3 us      72.00        128
+countParallelN     13              3284.5 us      19.37        128
+countParallelN     14              3224.7 us      14.82        128
+countParallelN     15              3202.1 us      16.27        128

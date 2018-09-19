@@ -1,0 +1,68 @@
+System information (Computer 1) 
+Processor: 2,3 GHz
+Memory: 8 GB
+
+# OS:   Mac OS X; 10.13.6; x86_64
+# JVM:  Oracle Corporation; 1.8.0_181
+# CPU:  null; 8 "cores"
+# Date: 2018-09-19T12:54:44+0200
+5509.0 ns
+   0.1 ns
+  32.6 ns
+  32.5 ns
+  33.5 ns
+  35.8 ns
+  35.5 ns
+  35.0 ns
+  33.1 ns
+  35.1 ns
+  35.9 ns
+  36.1 ns
+  34.1 ns
+  34.3 ns +/-  0.759
+ 152.7 ns +/-   108.61          2
+  89.0 ns +/-    41.38          4
+  65.0 ns +/-    15.12          8
+  51.7 ns +/-     7.32         16
+  45.2 ns +/-     3.48         32
+  51.0 ns +/-    27.44         64
+  41.8 ns +/-     2.96        128
+  41.0 ns +/-     2.50        256
+  40.2 ns +/-     1.19        512
+  39.8 ns +/-     0.66       1024
+  38.9 ns +/-     1.86       2048
+  37.4 ns +/-     0.83       4096
+  34.8 ns +/-     1.19       8192
+  34.5 ns +/-     2.15      16384
+  34.6 ns +/-     2.99      32768
+  31.3 ns +/-     0.66      65536
+  33.7 ns +/-     6.06     131072
+  32.6 ns +/-     3.30     262144
+  33.7 ns +/-     3.55     524288
+  33.1 ns +/-     1.65    1048576
+  33.1 ns +/-     1.60    2097152
+  32.8 ns +/-     0.94    4194304
+  32.7 ns +/-     0.67    8388608
+multiply                           1062.1 ns    1884.08          2
+multiply                            126.2 ns      53.28          4
+multiply                            128.5 ns      90.45          8
+multiply                             99.8 ns      33.03         16
+multiply                            139.0 ns     114.65         32
+multiply                             67.4 ns      39.79         64
+multiply                             50.6 ns       5.05        128
+multiply                             49.5 ns       2.99        256
+multiply                             50.5 ns       7.91        512
+multiply                             45.5 ns       0.62       1024
+multiply                             44.1 ns       2.52       2048
+multiply                             45.0 ns       0.76       4096
+multiply                             35.3 ns       1.82       8192
+multiply                             36.0 ns       4.55      16384
+multiply                             37.4 ns       6.25      32768
+multiply                             34.3 ns       5.01      65536
+multiply                             31.2 ns       0.38     131072
+multiply                             32.7 ns       3.61     262144
+multiply                             32.1 ns       2.14     524288
+multiply                             32.9 ns       1.72    1048576
+multiply                             32.3 ns       1.15    2097152
+multiply                             33.2 ns       0.79    4194304
+multiply                             32.4 ns       0.79    8388608

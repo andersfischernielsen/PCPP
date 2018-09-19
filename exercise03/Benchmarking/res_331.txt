@@ -1,0 +1,24 @@
+System information (Computer 1) 
+Processor: 2,3 GHz
+Memory: 8 GB
+
+# OS:   Mac OS X; 10.13.6; x86_64
+# JVM:  Oracle Corporation; 1.8.0_181
+# CPU:  null; 8 "cores"
+# Date: 2018-09-19T13:16:18+0200
+countSequential                   12773.4 us     420.79         32
+countParallelN      1             11637.6 us     255.82         32
+countParallelN      2              7290.7 us      93.82         64
+countParallelN      3              5072.6 us      32.04         64
+countParallelN      4              4159.0 us      99.70         64
+countParallelN      5              3958.6 us      96.55         64
+countParallelN      6              3656.8 us      36.98        128
+countParallelN      7              4029.1 us     490.44         64
+countParallelN      8              4186.0 us     192.91         64
+countParallelN      9              3621.2 us     202.77        128
+countParallelN     10              3693.8 us     107.74        128
+countParallelN     11              4054.8 us     382.33        128
+countParallelN     12              3705.1 us     234.46         64
+countParallelN     13              3437.6 us      56.18        128
+countParallelN     14              3416.3 us      51.09        128
+countParallelN     15              3435.7 us     172.14        128

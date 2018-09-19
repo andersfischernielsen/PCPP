@@ -1,0 +1,18 @@
+System information (Computer 1) 
+Processor: 2,3 GHz
+Memory: 8 GB
+
+# OS:   Mac OS X; 10.13.6; x86_64
+# JVM:  Oracle Corporation; 1.8.0_181
+# CPU:  null; 8 "cores"
+# Date: 2018-09-19T13:04:37+0200
+
+pow                                  86.0 ns       3.50    4194304
+exp                                  65.2 ns       2.23    4194304
+log                                  28.0 ns       0.71   16777216
+sin                                 148.8 ns       4.10    2097152
+cos                                 151.1 ns       3.92    2097152
+tan                                 177.1 ns       8.27    2097152
+asin                                290.4 ns       5.08    1048576
+acos                                273.4 ns       9.94    1048576
+atan                                 62.6 ns       2.05    4194304

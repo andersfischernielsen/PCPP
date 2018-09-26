@@ -38,9 +38,14 @@ class Example154 {
     FunList<Integer> testRemove = list7.remove(9);
     System.out.println(testRemove);
 
+    // should be 2
     int testCount = list7.count(x -> x == 9);
     if (testCount != 2) throw new AssertionError();
     System.out.println(testCount);
+
+    // should be 9 9
+    FunList<Integer> testFilter = list7.filter(x -> x == 9);
+    System.out.println(testFilter);
   }
 
   public static <T> FunList<T> cons(T item, FunList<T> list) { 
@@ -117,28 +122,6 @@ class FunList<T> {
     return i == 0 ? xs.next : new Node<T>(xs.item, removeAt(i-1, xs.next));
   }
 
-  public FunList<T> remove(T x) {
-    return new FunList<T>(remove(x, this.first));
-  }
-
-  protected static <T> Node<T> remove(T x, Node<T> xs) {
-    if (xs == null) return xs;
-    if (xs.item.equals(x)) {
-      return remove(x, xs.next);
-    }
-    return new Node<T>(xs.item, remove(x, xs.next));
-  }
-
-  public int count(Predicate<T> p) {
-    return countAcc(p, 0, this.first);
-  }
-
-  protected static <T> int countAcc(Predicate p, int c, Node<T> xs) {
-    if (xs == null || xs.item == null) return c;
-    int increment = p.test(xs.item) ? 1 : 0;
-    return countAcc(p, c+increment, xs.next);
-  }
-
   public FunList<T> reverse() {
     Node<T> xs = first, reversed = null;
     while (xs != null) {
@@ -203,6 +186,43 @@ class FunList<T> {
     StringBuilder sb = new StringBuilder();
     forEach(item -> sb.append(item).append(" "));
     return sb.toString();
+  }
+
+  //4.1.1
+  public FunList<T> remove(T x) {
+    return new FunList<T>(remove(x, this.first));
+  }
+
+  protected static <T> Node<T> remove(T x, Node<T> xs) {
+    if (xs == null) return xs;
+    if (xs.item.equals(x)) {
+      return remove(x, xs.next);
+    }
+    return new Node<T>(xs.item, remove(x, xs.next));
+  }
+
+  //4.1.2
+  public int count(Predicate<T> p) {
+    return countAcc(p, 0, this.first);
+  }
+
+  protected static <T> int countAcc(Predicate p, int c, Node<T> xs) {
+    if (xs == null || xs.item == null) return c;
+    int increment = p.test(xs.item) ? 1 : 0;
+    return countAcc(p, c+increment, xs.next);
+  }
+
+  //4.1.3
+  public FunList<T> filter(Predicate<T> p) {
+    return new FunList<T>(filter(p, this.first));
+  }
+
+  protected static <T> Node<T> filter(Predicate<T> p, Node<T> xs) {
+    if (xs == null) return xs;
+    if (!p.test(xs.item)) {
+      return filter(p, xs.next);
+    }
+    return new Node<T>(xs.item, filter(p, xs.next));
   }
 }
 

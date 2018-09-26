@@ -4,6 +4,7 @@
 import java.util.function.BiFunction;
 import java.util.function.Consumer;  
 import java.util.function.Function;  
+import java.util.function.Predicate;  
 
 class Example154 {
   public static void main(String[] args) {
@@ -32,6 +33,12 @@ class Example154 {
     System.out.println(list9);
     boolean allBig = list8.reduce(true, (res, item) -> res && item > 10);
     System.out.println(allBig);
+
+    // should be 7 13 7 13
+    FunList<Integer> testRemove = list7.remove(9);
+    System.out.println(testRemove);
+
+    
   }
 
   public static <T> FunList<T> cons(T item, FunList<T> list) { 
@@ -108,13 +115,16 @@ class FunList<T> {
     return i == 0 ? xs.next : new Node<T>(xs.item, removeAt(i-1, xs.next));
   }
 
-  public FunList<T> remove(T x, Node<T> xs) {
-    if (x == xs.item) {
+  public FunList<T> remove(T x) {
+    return new FunList<T>(remove(x, this.first));
+  }
+
+  protected static <T> Node<T> remove(T x, Node<T> xs) {
+    if (xs == null) return xs;
+    if (xs.item.equals(x)) {
       return remove(x, xs.next);
     }
-    else {
-      return new FunList<T>(new Node<T>(x, remove(x, xs.next)));
-    }
+    return new Node<T>(xs.item, remove(x, xs.next));
   }
 
   public FunList<T> reverse() {

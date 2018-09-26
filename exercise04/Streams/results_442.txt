@@ -1,0 +1,7 @@
+Exercise 4.4.2: 
+Parallel Sum =  21.3004815003479420
+java Exercises_44  12.02s user 0.11s system 500% cpu 2.424 total
+
+Sum =  21.3004815003479420
+java Exercises_44  16.66s user 1.90s system 188% cpu 9.818 total
+

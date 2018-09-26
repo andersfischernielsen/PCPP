@@ -2,9 +2,10 @@
 // Author: Peter Sestoft (sestoft@itu.dk)
 
 import java.util.function.BiFunction;
+import java.util.function.BinaryOperator;
 import java.util.function.Consumer;  
 import java.util.function.Function;  
-import java.util.function.Predicate;  
+import java.util.function.Predicate;
 
 class Example154 {
   public static void main(String[] args) {
@@ -224,5 +225,40 @@ class FunList<T> {
     }
     return new Node<T>(xs.item, filter(p, xs.next));
   }
+
+  //4.1.4
+  public FunList<T> removeFun(T t) {
+    return new FunList<T>(filter((x -> x == t), this.first));
+  }
+
+  //4.1.5
+  // public FunList<T> flatten(FunList<FunList<T>> xss) {
+  //   return new FunList<T>(flatten(xss.first));
+  // }
+  
+  // public <T> Node<T> flatten(Node<FunList<T>> xss) {
+  //   return (xss == null) ? xss : new Node<T>(xss.item, flatten(xss.next));
+  // }
+
+  //4.1.6
+  public FunList<T> flattenFun(FunList<FunList<T>> xss) {
+    return xss.reduce(new FunList<T>(), ((x, acc) -> acc.append(x)));
+  }
+
+  //4.1.7
+  // public FunList<U> flatMap(Function<T,FunList<U>> f) {
+  //   return new FunList<U>(flatMap(f, this.first));
+  // }
+
+  // public <U> Node<T> flatMap(Function<T,FunList<U>> f, Node<T,FunList<U>> n) {
+  //   FunList<U> res = f(n);
+  //   return new Node<T>(n, res.flatten(res));
+  // }
+
+  //4.1.8
+  // public FunList<T> scan(BinaryOperator<T> f) {
+  //   //The fuck? I don't even.
+  //   return null;
+  // }
 }
 

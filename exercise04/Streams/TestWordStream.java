@@ -17,16 +17,22 @@ public class TestWordStream {
   public static void main(String[] args) {
     String filename = "/usr/share/dict/words";
     System.out.println(readWords(filename).count());
+    print100(filename);
   }
 
   public static Stream<String> readWords(String filename) {
+    // 4.3.1
     try {
       BufferedReader reader = new BufferedReader(new FileReader(filename));
-      // TO DO: Implement properly
-      return Stream.<String>empty(); 
+      return reader.lines();
     } catch (IOException exn) { 
       return Stream.<String>empty();
     }
+  }
+
+  //4.3.2
+  public static void print100(String fileName) {
+    readWords(fileName).limit(100).forEach(x -> System.out.println(x));
   }
 
   public static boolean isPalindrome(String s) {

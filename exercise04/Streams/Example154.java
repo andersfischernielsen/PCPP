@@ -2,8 +2,10 @@
 // Author: Peter Sestoft (sestoft@itu.dk)
 
 import java.util.function.BiFunction;
+import java.util.function.BinaryOperator;
 import java.util.function.Consumer;  
 import java.util.function.Function;  
+import java.util.function.Predicate;
 
 class Example154 {
   public static void main(String[] args) {
@@ -32,6 +34,19 @@ class Example154 {
     System.out.println(list9);
     boolean allBig = list8.reduce(true, (res, item) -> res && item > 10);
     System.out.println(allBig);
+
+    // should be 7 13 7 13
+    FunList<Integer> testRemove = list7.remove(9);
+    System.out.println(testRemove);
+
+    // should be 2
+    int testCount = list7.count(x -> x == 9);
+    if (testCount != 2) throw new AssertionError();
+    System.out.println(testCount);
+
+    // should be 9 9
+    FunList<Integer> testFilter = list7.filter(x -> x == 9);
+    System.out.println(testFilter);
   }
 
   public static <T> FunList<T> cons(T item, FunList<T> list) { 
@@ -108,15 +123,6 @@ class FunList<T> {
     return i == 0 ? xs.next : new Node<T>(xs.item, removeAt(i-1, xs.next));
   }
 
-  public FunList<T> remove(T x, Node<T> xs) {
-    if (x == xs.item) {
-      return remove(x, xs.next);
-    }
-    else {
-      return new FunList<T>(new Node<T>(x, remove(x, xs.next)));
-    }
-  }
-
   public FunList<T> reverse() {
     Node<T> xs = first, reversed = null;
     while (xs != null) {
@@ -182,5 +188,77 @@ class FunList<T> {
     forEach(item -> sb.append(item).append(" "));
     return sb.toString();
   }
+
+  //4.1.1
+  public FunList<T> remove(T x) {
+    return new FunList<T>(remove(x, this.first));
+  }
+
+  protected static <T> Node<T> remove(T x, Node<T> xs) {
+    if (xs == null) return xs;
+    if (xs.item.equals(x)) {
+      return remove(x, xs.next);
+    }
+    return new Node<T>(xs.item, remove(x, xs.next));
+  }
+
+  //4.1.2
+  public int count(Predicate<T> p) {
+    return countAcc(p, 0, this.first);
+  }
+
+  protected static <T> int countAcc(Predicate p, int c, Node<T> xs) {
+    if (xs == null || xs.item == null) return c;
+    int increment = p.test(xs.item) ? 1 : 0;
+    return countAcc(p, c+increment, xs.next);
+  }
+
+  //4.1.3
+  public FunList<T> filter(Predicate<T> p) {
+    return new FunList<T>(filter(p, this.first));
+  }
+
+  protected static <T> Node<T> filter(Predicate<T> p, Node<T> xs) {
+    if (xs == null) return xs;
+    if (!p.test(xs.item)) {
+      return filter(p, xs.next);
+    }
+    return new Node<T>(xs.item, filter(p, xs.next));
+  }
+
+  //4.1.4
+  public FunList<T> removeFun(T t) {
+    return new FunList<T>(filter((x -> x == t), this.first));
+  }
+
+  //4.1.5
+  // public FunList<T> flatten(FunList<FunList<T>> xss) {
+  //   return new FunList<T>(flatten(xss.first));
+  // }
+  
+  // public <T> Node<T> flatten(Node<FunList<T>> xss) {
+  //   return (xss == null) ? xss : new Node<T>(xss.item, flatten(xss.next));
+  // }
+
+  //4.1.6
+  public FunList<T> flattenFun(FunList<FunList<T>> xss) {
+    return xss.reduce(new FunList<T>(), ((x, acc) -> acc.append(x)));
+  }
+
+  //4.1.7
+  // public FunList<U> flatMap(Function<T,FunList<U>> f) {
+  //   return new FunList<U>(flatMap(f, this.first));
+  // }
+
+  // public <U> Node<T> flatMap(Function<T,FunList<U>> f, Node<T,FunList<U>> n) {
+  //   FunList<U> res = f(n);
+  //   return new Node<T>(n, res.flatten(res));
+  // }
+
+  //4.1.8
+  // public FunList<T> scan(BinaryOperator<T> f) {
+  //   //The fuck? I don't even.
+  //   return null;
+  // }
 }
 

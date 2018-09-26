@@ -38,7 +38,9 @@ class Example154 {
     FunList<Integer> testRemove = list7.remove(9);
     System.out.println(testRemove);
 
-    
+    int testCount = list7.count(x -> x == 9);
+    if (testCount != 2) throw new AssertionError();
+    System.out.println(testCount);
   }
 
   public static <T> FunList<T> cons(T item, FunList<T> list) { 
@@ -125,6 +127,16 @@ class FunList<T> {
       return remove(x, xs.next);
     }
     return new Node<T>(xs.item, remove(x, xs.next));
+  }
+
+  public int count(Predicate<T> p) {
+    return countAcc(p, 0, this.first);
+  }
+
+  protected static <T> int countAcc(Predicate p, int c, Node<T> xs) {
+    if (xs == null || xs.item == null) return c;
+    int increment = p.test(xs.item) ? 1 : 0;
+    return countAcc(p, c+increment, xs.next);
   }
 
   public FunList<T> reverse() {

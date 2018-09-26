@@ -108,6 +108,15 @@ class FunList<T> {
     return i == 0 ? xs.next : new Node<T>(xs.item, removeAt(i-1, xs.next));
   }
 
+  public FunList<T> remove(T x, Node<T> xs) {
+    if (x == xs.item) {
+      return remove(x, xs.next);
+    }
+    else {
+      return new FunList<T>(new Node<T>(x, remove(x, xs.next)));
+    }
+  }
+
   public FunList<T> reverse() {
     Node<T> xs = first, reversed = null;
     while (xs != null) {

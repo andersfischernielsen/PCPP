@@ -19,6 +19,7 @@ public class TestWordStream {
   public static void main(String[] args) {
     String filename = "/usr/share/dict/words";
     Stream<String> words = readWords(filename);
+    System.out.println(countEs(filename));
   }
 
   private static void printStream(Stream stream) {
@@ -87,6 +88,14 @@ public class TestWordStream {
     return s.chars()
       .mapToObj(c -> (char) c)
       .collect(Collectors.groupingBy(c -> c, TreeMap::new, Collectors.counting()));
+  }
+
+
+  //4.3.10
+  public static long countEs(String filename) {
+    var counts = readWords(filename).reduce("", (w, acc) -> w + acc);
+    var es = buildCharacterTree(counts).get('e');
+    return es;
   }
 
   public static Map<Character,Integer> letters(String s) {

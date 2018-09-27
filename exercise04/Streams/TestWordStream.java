@@ -1,6 +1,3 @@
-// Week 3
-// sestoft@itu.dk * 2015-09-09
-
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;

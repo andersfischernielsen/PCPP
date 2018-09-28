@@ -15,13 +15,13 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
+import java.util.concurrent.atomic.LongAdder;
 import java.util.function.IntToDoubleFunction;
 
 
 public class TestCountPrimesTasks {
-  private static final ExecutorService executor 
+  private static final ExecutorService executor
     = Executors.newWorkStealingPool();
-  //  = Executors.newCachedThreadPool();
   
   public static void main(String[] args) {
     SystemInfo();
@@ -34,13 +34,13 @@ public class TestCountPrimesTasks {
 			     i -> countParallelN2(range, 32)));
     System.out.println(Mark7(String.format("countParTask3 %6d", 32), 
 			     i -> countParallelN3(range, 32)));
-    for (int c=1; c<=100; c++) {
+    for (int c=1; c<=10; c++) {
       final int taskCount = c;
       Mark7(String.format("countParTask1 %6d", taskCount), 
 	    i -> countParallelN1(range, taskCount));
       
     }
-    for (int c=1; c<=100; c++) {
+    for (int c=1; c<=10; c++) {
       final int taskCount = c;
       Mark7(String.format("countParTask2 %6d", taskCount), 
 	    i -> countParallelN2(range, taskCount));
@@ -67,7 +67,7 @@ public class TestCountPrimesTasks {
   // General parallel solution, using multiple (Runnable) tasks
   private static long countParallelN1(int range, int taskCount) {
     final int perTask = range / taskCount;
-    final LongCounter lc = new LongCounter();
+    final LongAdder lc = new LongAdder();
     List<Future<?>> futures = new ArrayList<Future<?>>();
     for (int t=0; t<taskCount; t++) {
       final int from = perTask * t, 
@@ -86,7 +86,7 @@ public class TestCountPrimesTasks {
     } catch (ExecutionException exn) { 
       throw new RuntimeException(exn.getCause()); 
     }
-    return lc.get();
+    return lc.sum();
   }
 
   // General parallel solution, using multiple Callable<Long> tasks
@@ -121,7 +121,7 @@ public class TestCountPrimesTasks {
   // as to be able to submit all to the executor in one method call.
   private static long countParallelN3(int range, int taskCount) {
     final int perTask = range / taskCount;
-    final LongCounter lc = new LongCounter();
+    final LongAdder lc = new LongAdder();
     List<Callable<Void>> tasks = new ArrayList<Callable<Void>>();
     for (int t=0; t<taskCount; t++) {
       final int from = perTask * t, 
@@ -138,7 +138,7 @@ public class TestCountPrimesTasks {
     } catch (InterruptedException exn) { 
       System.out.println("Interrupted: " + exn);
     } 
-    return lc.get();
+    return lc.sum();
   }
 
   // --- Benchmarking infrastructure ---

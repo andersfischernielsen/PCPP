@@ -129,12 +129,38 @@ We see that the `LongAdder` in a few instances perform better, but that it gener
 ## 5.3
 
 ### 5.3.1
+Woo, the code works. 
 
 ### 5.3.2
+See `TestDownload.java`.
 
 ### 5.3.3
+See `TestDownload.java`.
+
+````
+Times for testGetPages were:
+3,172458 per 5x run of 23 pages.
+2,030432 per 5x run of 23 pages.
+1,792316 per 5x run of 23 pages.
+1,589728 per 5x run of 23 pages.
+1,579027 per 5x run of 23 pages.
+10.182585558 for all runs combined.
+```` 
 
 ### 5.3.4
+See `TestDownload.java`.
+
+```` 
+Times for testGetPagesParallel were:
+0,842269 per 5x run of 23 pages.
+1,006780 per 5x run of 23 pages.
+0,712039 per 5x run of 23 pages.
+0,752190 per 5x run of 23 pages.
+0,768670 per 5x run of 23 pages.
+4.08320403 for all runs combined.
+```` 
+It _IS_ faster to run a lot af pages parallel a lot of times, so it _IS_ faster to fetch 23 pages in parallel. 
+
 
 ## 5.4
 

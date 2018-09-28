@@ -102,7 +102,8 @@ public class TestDownload {
         } catch (Exception ex) { }
       }
     } catch (InterruptedException ie) { return null; }
-    
+    //We apologise for the nasty exception handling. Code was written to time on, not for actual correctness.
+
     return toReturn;
   }
 }

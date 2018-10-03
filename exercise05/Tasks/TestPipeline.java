@@ -43,9 +43,9 @@ public class TestPipeline {
   }
 
   private static void runAsThreads() {
-    //final ExecutorService executor = Executors.newWorkStealingPool();
+    final ExecutorService executor = Executors.newWorkStealingPool();
     //final ExecutorService executor = Executors.newFixedThreadPool(6);
-    final ExecutorService executor = Executors.newFixedThreadPool(3);
+    //final ExecutorService executor = Executors.newFixedThreadPool(3);
 
     final BlockingQueue<String> urls = new OneItemQueue<String>();
     final BlockingQueue<Webpage> pages = new OneItemQueue<Webpage>();
@@ -62,7 +62,7 @@ public class TestPipeline {
     Runnable t5 = new LinkPrinter(refPairs);
 
     futures.add(executor.submit(t1));
-    futures.add(executor.submit(t2));
+    futures.add(executor.submit(t21));
     futures.add(executor.submit(t3));
     futures.add(executor.submit(t4));
     futures.add(executor.submit(t5));
@@ -72,6 +72,7 @@ public class TestPipeline {
         f.get();
       } catch (Exception e) {}
     }
+
   }
 }
 

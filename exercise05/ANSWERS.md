@@ -1,3 +1,10 @@
+ANSWERS
+==========
+
+_Emma Arfelt Kock, ekoc_
+
+_Anders Fischer, afin_
+
 # Exercise 5
 
 ## 5.1
@@ -79,6 +86,7 @@ countParTask2     10               4372,5 us      46,29         64
 ````
 
 ### 5.1.3
+![alt text](graph_513.png "")
 
 
 ### 5.1.4
@@ -228,6 +236,28 @@ Code attached:
 ````
 
 ### 5.4.3
+```java 
+List<Future<?>> futures = new ArrayList<Future<?>>();
+
+    Runnable t1 = new UrlProducer(urls);
+    Runnable t21 = new PageGetter(urls, pages);
+    Runnable t22 = new PageGetter(urls, pages);
+    Runnable t3 = new LinkScanner(pages, uniqueLinks);
+    Runnable t4 = new Uniquifier(uniqueLinks, refPairs);
+    Runnable t5 = new LinkPrinter(refPairs);
+
+    futures.add(executor.submit(t1));
+    futures.add(executor.submit(t21));
+    futures.add(executor.submit(t3));
+    futures.add(executor.submit(t4));
+    futures.add(executor.submit(t5));
+
+    for (Future f : futures) {
+      try {
+        f.get();
+      } catch (Exception e) {}
+    }
+```
 
 ### 5.4.4
 ````java

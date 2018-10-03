@@ -21,8 +21,19 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.IOException;
 
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Future;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Arrays;
+
 // For regular expressions
 import java.util.regex.Matcher;
+import java.util.HashSet;
+import java.util.concurrent.ExecutorService;
 import java.util.regex.MatchResult;
 import java.util.regex.Pattern;
 
@@ -32,14 +43,35 @@ public class TestPipeline {
   }
 
   private static void runAsThreads() {
+    //final ExecutorService executor = Executors.newWorkStealingPool();
+    //final ExecutorService executor = Executors.newFixedThreadPool(6);
+    final ExecutorService executor = Executors.newFixedThreadPool(3);
+
     final BlockingQueue<String> urls = new OneItemQueue<String>();
     final BlockingQueue<Webpage> pages = new OneItemQueue<Webpage>();
     final BlockingQueue<Link> refPairs = new OneItemQueue<Link>();
-    Thread t1 = new Thread(new UrlProducer(urls));
-    Thread t2 = new Thread(new PageGetter(urls, pages));
-    Thread t3 = new Thread(new LinkScanner(pages, refPairs));
-    Thread t4 = new Thread(new LinkPrinter(refPairs));
-    t1.start(); t2.start(); t3.start(); t4.start(); 
+    final BlockingQueue<Link> uniqueLinks = new OneItemQueue<Link>();
+
+    List<Future<?>> futures = new ArrayList<Future<?>>();
+
+    Runnable t1 = new UrlProducer(urls);
+    Runnable t21 = new PageGetter(urls, pages);
+    Runnable t22 = new PageGetter(urls, pages);
+    Runnable t3 = new LinkScanner(pages, uniqueLinks);
+    Runnable t4 = new Uniquifier(uniqueLinks, refPairs);
+    Runnable t5 = new LinkPrinter(refPairs);
+
+    futures.add(executor.submit(t1));
+    futures.add(executor.submit(t2));
+    futures.add(executor.submit(t3));
+    futures.add(executor.submit(t4));
+    futures.add(executor.submit(t5));
+
+    for (Future f : futures) {
+      try {
+        f.get();
+      } catch (Exception e) {}
+    }
   }
 }
 
@@ -56,11 +88,33 @@ class UrlProducer implements Runnable {
   }
 
   private static final String[] urls = 
-  { "http://www.itu.dk", "http://www.di.ku.dk", "http://www.miele.de",
+  { "http://www.itu.dk", "http://www.itu.dk", "http://www.di.ku.dk", "http://www.miele.de",
     "http://www.microsoft.com", "http://www.amazon.com", "http://www.dr.dk",
     "http://www.vg.no", "http://www.tv2.dk", "http://www.google.com",
     "http://www.ing.dk", "http://www.dtu.dk", "http://www.bbc.co.uk"
   };
+}
+
+class Uniquifier<T> implements Runnable {
+  private final BlockingQueue<T> input;
+  private final BlockingQueue<T> output;
+  private final HashSet<T> items;
+
+  public Uniquifier(BlockingQueue<T> input, BlockingQueue<T> output) {
+    this.output = output;
+    this.input = input;
+    this.items = new HashSet<>();
+  }
+
+  public void run() { 
+    while (true) {
+      T item = input.take();
+      if (!items.contains(item)) { 
+        items.add(item); 
+        output.put(item); 
+      }
+    }
+  }
 }
 
 class PageGetter implements Runnable {

@@ -134,8 +134,18 @@ Woo, the code works.
 ### 5.3.2
 See `TestDownload.java`.
 
+Code attached: 
+````java
+    public static Map<String, String> getPages(String[] urls, int maxLines) throws IOException {
+        return Arrays.stream(urls).collect(Collectors.toMap(u -> u, u -> {
+            try {
+                return getPage(u, maxLines);
+            } catch (IOException e) { return ""; }
+        }));
+    }
+````
+
 ### 5.3.3
-See `TestDownload.java`.
 
 ````
 Times for testGetPages were:
@@ -150,6 +160,28 @@ Times for testGetPages were:
 ### 5.3.4
 See `TestDownload.java`.
 
+Code attached: 
+````java  
+    public static Map<String, String> getPagesParallel(String[] urls, int maxLines) throws IOException {
+        var tasks = new ArrayList<Callable<AbstractMap.SimpleEntry<String, String>>>();
+        //There are no tuples in this horrible language. ^^^^^
+        Arrays.stream(urls).forEach(u -> tasks.add(() -> new AbstractMap.SimpleEntry(u, getPage(u, maxLines))));
+
+        TreeMap<String, String> toReturn = new TreeMap<String, String>();
+        try {
+            for (Future<AbstractMap.SimpleEntry<String, String>> e : executor.invokeAll(tasks)) {
+                try {
+                    AbstractMap.SimpleEntry<String, String> result = e.get();
+                    toReturn.put(result.getKey(), result.getValue());
+                } catch (Exception ex) { }
+            }
+        } catch (InterruptedException ie) { return null; }
+        //We apologise for the nasty exception handling. Code was written to time on, not for actual correctness.
+
+        return toReturn;
+    }
+````
+
 ```` 
 Times for testGetPagesParallel were:
 0,842269 per 5x run of 23 pages.
@@ -159,19 +191,60 @@ Times for testGetPagesParallel were:
 0,768670 per 5x run of 23 pages.
 4.08320403 for all runs combined.
 ```` 
-It _IS_ faster to run a lot af pages parallel a lot of times, so it _IS_ faster to fetch 23 pages in parallel. 
+It _IS_ faster to run a lot af pages parallel a lot of times, so it _IS_ faster to fetch 23 pages in parallel, but it is not 23 times faster, due to overhead in swapping tasks and managing the thread pool, creating threads for tasks etc.
 
 
 ## 5.4
 
 ### 5.4.1
+N/A - code ran fine.
 
 ### 5.4.2
+See `TestPipeline.java`
+
+Code attached: 
+````java
+    class Uniquifier<T> implements Runnable {
+        private final BlockingQueue<T> input;
+        private final BlockingQueue<T> output;
+        private final HashSet<T> items;
+
+        public Uniquifier(BlockingQueue<T> input, BlockingQueue<T> output) {
+            this.output = output;
+            this.input = input;
+            this.items = new HashSet<>();
+        }
+
+        public void run() { 
+            while (true) {
+                T item = input.take();
+                if (!items.contains(item)) { 
+                    items.add(item); 
+                    output.put(item); 
+                }
+            }
+        }
+    }
+````
 
 ### 5.4.3
 
 ### 5.4.4
+````java
+    final ExecutorService executor = Executors.newFixedThreadPool(6);
+````
 
 ### 5.4.5
+````java
+    final ExecutorService executor = Executors.newFixedThreadPool(3);
+````
 
 ### 5.4.6
+````java
+    Runnable pageGetter1 = new PageGetter(urls, pages);
+    Runnable pageGetter2 = new PageGetter(urls, pages);
+````
+
+The order is different due to concurrent execution, so one thread might take work before the other when it's available. 
+
+The results are the same since due to the fact that while one PageGetter is fetching a page, the other can submit to the queue and the pipeline can start processing. The amount of PageGetters does not matter.

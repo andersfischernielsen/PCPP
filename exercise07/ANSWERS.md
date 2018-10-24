@@ -94,6 +94,6 @@ public String doInBackground() {
 ## 7.2
 
 ### 7.2.1
-Every lift has it's own thread and every method is synchronized. 
+Every lift has it's own thread and every method on the Runnable is synchronized. 
 
 ### 7.2.2

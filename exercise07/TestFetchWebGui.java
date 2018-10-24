@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.*;
 import java.util.concurrent.CancellationException;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.atomic.AtomicInteger;
 
 // For downloading web pages
 import java.net.URL;
@@ -112,7 +113,8 @@ public class TestFetchWebGui {
       downloadTask.addPropertyChangeListener(new PropertyChangeListener() {
         public void propertyChange(PropertyChangeEvent e) {
           if ("progress".equals(e.getPropertyName())) {
-            progressBar.setValue((Integer)e.getNewValue());
+            int count = (Integer)e.getNewValue();
+            progressBar.setValue(100 * count / downloadWorkers.size());
           }}});
     }
     // (3) Enable cancellation
@@ -159,6 +161,7 @@ public class TestFetchWebGui {
   static class DownloadWorker extends SwingWorker<String,String> {
     private final TextArea textArea; 
     private final String url;
+    private static final AtomicInteger count = new AtomicInteger(1);
 
     public DownloadWorker(TextArea textArea, String url) {
       this.textArea = textArea;
@@ -169,14 +172,13 @@ public class TestFetchWebGui {
     // hence cannot write to textArea.
     public String doInBackground() {
       StringBuilder sb = new StringBuilder();
-      int count = 0;
         if (isCancelled())			    // (3)
            return sb.toString();
 	      System.out.println("Fetching " + url);
         String page = getPage(url, 200);
         String result = String.format("%-40s%7d%n", url, page.length());
         sb.append(result); // (1)
-        setProgress((100 * ++count) / urls.length); // (2)
+        setProgress(count.getAndIncrement()); // (2)
         publish(result); // (4)
         textArea.append(result);
         return sb.toString();

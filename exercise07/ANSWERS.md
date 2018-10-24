@@ -146,3 +146,22 @@ public static void main(String[] args) {
   }
 }
 ```
+
+### 7.2.3
+We removed the Thread creation in the `main()` method, and replaced it with: 
+
+```java
+    final int rate = 16;
+    final ScheduledThreadPoolExecutor scheduler = new ScheduledThreadPoolExecutor(4);
+    scheduler.scheduleAtFixedRate(lift1, rate, rate, TimeUnit.MILLISECONDS);
+    scheduler.scheduleAtFixedRate(lift2, rate, rate, TimeUnit.MILLISECONDS);
+    scheduler.scheduleAtFixedRate(lift3, rate, rate, TimeUnit.MILLISECONDS);
+    scheduler.scheduleAtFixedRate(lift4, rate, rate, TimeUnit.MILLISECONDS);
+```
+
+We also removed the sleep() calls and the related try/catch statements.
+
+### 7.2.4
+```java
+
+```

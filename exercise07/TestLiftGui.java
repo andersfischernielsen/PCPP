@@ -6,6 +6,9 @@
 
 import java.awt.*;
 import java.awt.event.*;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
+
 import javax.swing.*;
 
 public class TestLiftGui {
@@ -24,8 +27,13 @@ public class TestLiftGui {
       lift3Display = new LiftDisplay(lift3, true),
       lift4Display = new LiftDisplay(lift4, false);
     LiftController controller = new LiftController(lift1, lift2, lift3, lift4);
-    Thread t1 = new Thread(lift1), t2 = new Thread(lift2), t3 = new Thread(lift3), t4 = new Thread(lift4);
-    t1.start(); t2.start(); t3.start(); t4.start();
+    
+    final int rate = 16;
+    final ScheduledThreadPoolExecutor scheduler = new ScheduledThreadPoolExecutor(4);
+    scheduler.scheduleAtFixedRate(lift1, rate, rate, TimeUnit.MILLISECONDS);
+    scheduler.scheduleAtFixedRate(lift2, rate, rate, TimeUnit.MILLISECONDS);
+    scheduler.scheduleAtFixedRate(lift3, rate, rate, TimeUnit.MILLISECONDS);
+    scheduler.scheduleAtFixedRate(lift4, rate, rate, TimeUnit.MILLISECONDS);
 
     // The graphical presentation
     final JFrame frame = new JFrame("TestLiftGui");
@@ -297,8 +305,6 @@ class Lift implements Runnable {
   public void run() {
     final double steps = 16.0; 
     while (true) {
-      try { Thread.sleep((int)(1000.0/steps)); }
-      catch (InterruptedException exn) { }
       switch (direction) {
       case Up: 
         if ((int)floor == floor) { // At a floor, maybe stop here
@@ -342,16 +348,12 @@ class Lift implements Runnable {
   
   private void openAndCloseDoors() {
     final double steps = 16.0; 
-    try { 
-      for (double doorOpen=0.0; doorOpen <= 1; doorOpen += 1.0/steps) {
-        Thread.sleep((int)(1000.0/steps)); 
-        shaft.moveTo(floor, doorOpen);
-      }
-      for (double doorOpen=1.0; doorOpen >= 0; doorOpen -= 1.0/steps) {
-        Thread.sleep((int)(1000.0/steps)); 
-        shaft.moveTo(floor, doorOpen);
-      } 
-    } catch (InterruptedException exn) { }
+    for (double doorOpen=0.0; doorOpen <= 1; doorOpen += 1.0/steps) {
+      shaft.moveTo(floor, 1.0);
+    }
+    for (double doorOpen=1.0; doorOpen >= 0; doorOpen -= 1.0/steps) {
+      shaft.moveTo(floor, 0.0);
+    } 
   }
 }
 

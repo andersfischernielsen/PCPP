@@ -162,6 +162,25 @@ We removed the Thread creation in the `main()` method, and replaced it with:
 We also removed the sleep() calls and the related try/catch statements.
 
 ### 7.2.4
-```java
+We added the function `anyLiftAt(double floor)` to the Controller as seen below.
 
+```java
+  public boolean anyLiftAt(double floor) {
+    return Arrays.stream(lifts).anyMatch(l -> l.getFloor() == floor);
+  }
+```
+
+Then we added the following to UpDownButtons:
+
+```java
+  up.addActionListener(new ActionListener() {
+    public void actionPerformed(ActionEvent e) {
+      controller.someLiftTo(atFloor, Direction.Up);
+      while (!controller.anyLiftAt(atFloor)) up.setBackground(Color.RED);
+    }});
+  down.addActionListener(new ActionListener() {
+    public void actionPerformed(ActionEvent e) {
+      controller.someLiftTo(atFloor, Direction.Down);
+      while (!controller.anyLiftAt(atFloor)) down.setBackground(Color.RED);
+    }});
 ```

@@ -12,23 +12,41 @@ public class TestLiftGui {
   public static void main(String[] args) {
     // The lift model and associated graphics
     final LiftShaft shaft1 = new LiftShaft(), 
-      shaft2 = new LiftShaft();
+      shaft2 = new LiftShaft(),
+      shaft3 = new LiftShaft(),
+      shaft4 = new LiftShaft();
     final Lift lift1 = new Lift("Lift1", shaft1), 
-      lift2 = new Lift("Lift2", shaft2);
+      lift2 = new Lift("Lift2", shaft2),
+      lift3 = new Lift("Lift3", shaft3),
+      lift4 = new Lift("Lift4", shaft4);
     final LiftDisplay lift1Display = new LiftDisplay(lift1, true), 
-      lift2Display = new LiftDisplay(lift2, false);
-    LiftController controller = new LiftController(lift1, lift2);
-    Thread t1 = new Thread(lift1), t2 = new Thread(lift2);
-    t1.start(); t2.start();
+      lift2Display = new LiftDisplay(lift2, false),
+      lift3Display = new LiftDisplay(lift3, true),
+      lift4Display = new LiftDisplay(lift4, false);
+    LiftController controller = new LiftController(lift1, lift2, lift3, lift4);
+    Thread t1 = new Thread(lift1), t2 = new Thread(lift2), t3 = new Thread(lift3), t4 = new Thread(lift4);
+    t1.start(); t2.start(); t3.start(); t4.start();
 
     // The graphical presentation
     final JFrame frame = new JFrame("TestLiftGui");
+    final JPanel framePanel = new JPanel();
+    framePanel.setLayout(new BorderLayout());
+    
     final JPanel panel = new JPanel();
-    frame.add(panel);
     panel.setLayout(new BorderLayout());
     panel.add(lift1Display, BorderLayout.WEST);
-    panel.add(new OutsideLiftButtons(controller), BorderLayout.CENTER);
     panel.add(lift2Display, BorderLayout.EAST);
+    framePanel.add(panel, BorderLayout.WEST);
+    
+    framePanel.add(new OutsideLiftButtons(controller), BorderLayout.CENTER);
+
+    final JPanel panel2 = new JPanel();
+    panel2.setLayout(new BorderLayout());
+    panel2.add(lift3Display, BorderLayout.WEST);
+    panel2.add(lift4Display, BorderLayout.EAST);
+    framePanel.add(panel2, BorderLayout.EAST);
+    
+    frame.add(framePanel);
     frame.pack(); frame.setVisible(true);
   }
 }
@@ -43,7 +61,7 @@ class LiftDisplay extends JPanel {
 }
 
 class LiftShaft extends Canvas {
-  public final int lowFloor = -1, highFloor = 5;
+  public final int lowFloor = -2, highFloor = 10;
   private double atFloor = 0.0,         // in [lowFloor, highFloor]
     doorOpen = 0.0;                     // in [0, 1]
 

@@ -9,6 +9,7 @@ import javax.swing.*;
 
 // For the SwingWorker subclass
 import java.util.List;
+import java.util.*;
 import java.util.concurrent.CancellationException;
 import java.util.concurrent.ExecutionException;
 
@@ -91,24 +92,35 @@ public class TestFetchWebGui {
     textArea.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 12));
     outerPanel.add(textArea, BorderLayout.WEST);
     // (1) Use a background thread, not the event thread, for work
-    DownloadWorker downloadTask = new DownloadWorker(textArea);
+    
+    List<DownloadWorker> downloadWorkers = new ArrayList<DownloadWorker>();
+    for (String url : urls) {
+      downloadWorkers.add(new DownloadWorker(textArea, url));
+    }
+
     fetchButton.addActionListener(new ActionListener() {
         public void actionPerformed(ActionEvent e) {
-          downloadTask.execute();
+          for (DownloadWorker d : downloadWorkers)
+          d.execute();
         }});
     // (2) Add a progress bar
     JProgressBar progressBar = new JProgressBar(0, 100);
     //    progressBar.setValue(50);
     outerPanel.add(progressBar, BorderLayout.SOUTH);
-    downloadTask.addPropertyChangeListener(new PropertyChangeListener() {
+
+    for (DownloadWorker downloadTask : downloadWorkers) {
+      downloadTask.addPropertyChangeListener(new PropertyChangeListener() {
         public void propertyChange(PropertyChangeEvent e) {
           if ("progress".equals(e.getPropertyName())) {
             progressBar.setValue((Integer)e.getNewValue());
           }}});
+    }
     // (3) Enable cancellation
     cancelButton.addActionListener(new ActionListener() {
         public void actionPerformed(ActionEvent e) {
-          downloadTask.cancel(false);
+          for (DownloadWorker downloadTask : downloadWorkers) {
+            downloadTask.cancel(false);
+          }
         }});
     frame.pack(); frame.setVisible(true);
   }
@@ -146,9 +158,11 @@ public class TestFetchWebGui {
 
   static class DownloadWorker extends SwingWorker<String,String> {
     private final TextArea textArea; 
+    private final String url;
 
-    public DownloadWorker(TextArea textArea) {
+    public DownloadWorker(TextArea textArea, String url) {
       this.textArea = textArea;
+      this.url = url;
     }
 
     // Called on a separate worker thread, not the event thread, and
@@ -156,25 +170,16 @@ public class TestFetchWebGui {
     public String doInBackground() {
       StringBuilder sb = new StringBuilder();
       int count = 0;
-      for (String url : urls) {
         if (isCancelled())			    // (3)
-           break;
-	System.out.println("Fetching " + url);
-        String page = getPage(url, 200),
-          result = String.format("%-40s%7d%n", url, page.length());
+           return sb.toString();
+	      System.out.println("Fetching " + url);
+        String page = getPage(url, 200);
+        String result = String.format("%-40s%7d%n", url, page.length());
         sb.append(result); // (1)
         setProgress((100 * ++count) / urls.length); // (2)
         publish(result); // (4)
-      }
-      return sb.toString();
-    }
-  
-    // (4) Called on the event thread to process results previously
-    // published by calls to the publish method.
-    public void process(List<String> results) {
-        System.err.println("run process");
-        for (String result : results)
         textArea.append(result);
+        return sb.toString();
     }
 
     // Called in the event thread when done() has terminated, whether

@@ -94,7 +94,7 @@ public String doInBackground() {
 ## 7.2
 
 ### 7.2.1
-Every lift has it's own thread and every method is synchronized. 
+Every lift has it's own thread and every method on the Runnable is synchronized. 
 
 ### 7.2.2
 Hotel lift with four elevators and floors from -2 to 10. Alterations in code: 

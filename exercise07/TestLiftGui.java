@@ -8,6 +8,8 @@ import java.awt.*;
 import java.awt.event.*;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
+import java.util.Arrays;
+import java.util.stream.Stream;
 
 import javax.swing.*;
 
@@ -147,10 +149,12 @@ class UpDownButtons extends JPanel {
     up.addActionListener(new ActionListener() {
         public void actionPerformed(ActionEvent e) {
           controller.someLiftTo(atFloor, Direction.Up);
+          while (!controller.anyLiftAt(atFloor)) up.setBackground(Color.RED);
         }});
     down.addActionListener(new ActionListener() {
         public void actionPerformed(ActionEvent e) {
           controller.someLiftTo(atFloor, Direction.Down);
+          while (!controller.anyLiftAt(atFloor)) down.setBackground(Color.RED);
         }});
     up.setVisible(atFloor < controller.highFloor);
     down.setVisible(atFloor > controller.lowFloor);
@@ -186,6 +190,10 @@ class LiftController {
     }
     lifts[bestLift].customerAt(floor, dir);
   }
+
+  public boolean anyLiftAt(double floor) {
+    return Arrays.stream(lifts).anyMatch(l -> l.getFloor() == floor);
+  }
 }
 
 class Lift implements Runnable {
@@ -206,6 +214,10 @@ class Lift implements Runnable {
     this.floor = 0.0;
     this.direction = Direction.None;
     this.stops = new Direction[highFloor-lowFloor+1];
+  }
+
+  public synchronized double getFloor() {
+    return this.floor;
   }
 
   // All these private methods are used in the lift's

@@ -74,3 +74,42 @@ and in Class TestFetchWebGui:
 ```
 
 ### 7.1.2
+```java
+ // (3) Enable cancellation
+    cancelButton.addActionListener(new ActionListener() {
+        public void actionPerformed(ActionEvent e) {
+          for (DownloadWorker downloadTask : downloadWorkers) {
+            downloadTask.cancel(false);
+          }
+        }});
+```
+
+### 7.1.3
+Alteration in Class TestFetchWebGui (in method goodFetch()): 
+
+```java
+ JProgressBar progressBar = new JProgressBar(0, 100);
+    //    progressBar.setValue(50);
+    outerPanel.add(progressBar, BorderLayout.SOUTH);
+
+    for (DownloadWorker downloadTask : downloadWorkers) {
+      downloadTask.addPropertyChangeListener(new PropertyChangeListener() {
+        public void propertyChange(PropertyChangeEvent e) {
+          if ("progress".equals(e.getPropertyName())) {
+            int count = (Integer)e.getNewValue();
+            progressBar.setValue(100 * count / downloadWorkers.size());
+          }}});
+    }
+```
+
+and 
+```java
+private static final AtomicInteger count = new AtomicInteger(1);
+...
+public String doInBackground() {
+    ...
+    setProgress(count.getAndIncrement()); // (2)
+    ...
+```
+
+## 7.2

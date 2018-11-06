@@ -1,5 +1,4 @@
-ANSWERS
-==========
+# ANSWERS
 
 _Emma Arfelt Kock, ekoc_
 
@@ -10,6 +9,7 @@ _Anders Fischer, afin_
 ## Exercise 9.2
 
 ### 9.2.1
+
 ```java
 class StmHistogram implements Histogram {
   private final TxnInteger[] counts;
@@ -32,13 +32,14 @@ class StmHistogram implements Histogram {
   public int getSpan() {
     return atomic(() -> counts.length);
   }
-
 ```
 
 ### 9.2.2
-Yes, it produces the same result. 
+
+Yes, it produces the same result.
 
 ### 9.2.3
+
 ```java
  public int[] getBins() {
     return atomic(() -> {
@@ -52,6 +53,7 @@ Yes, it produces the same result.
 ```
 
 ### 9.2.4
+
 ```java
 public int getAndClear(int bin) {
     return atomic(() -> {
@@ -63,6 +65,7 @@ public int getAndClear(int bin) {
 ```
 
 ### 9.2.5
+
 ```java
      public void transferBins(Histogram hist) {
     atomic(() -> {
@@ -76,6 +79,7 @@ public int getAndClear(int bin) {
 ```
 
 ### 9.2.6
+
 ```java
   final Histogram total = new StmHistogram(30);
   ...
@@ -88,3 +92,17 @@ public int getAndClear(int bin) {
 ```
 
 ### 9.2.7
+
+We would expect the Histograms to have traded contents, since that is what the specification of `transferBins` specifies.
+
+## 9.3
+
+### 9.3.1
+
+### 9.3.2
+
+### 9.3.3
+
+### 9.3.4
+
+### 9.3.5

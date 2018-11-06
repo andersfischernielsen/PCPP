@@ -30,6 +30,7 @@ class TestStmHistogram {
 
   private static void countPrimeFactorsWithStmHistogram() {
     final Histogram histogram = new StmHistogram(30);
+    final Histogram total = new StmHistogram(30);
     final int range = 4_000_000;
     final int threadCount = 10, perThread = range / threadCount;
     final CyclicBarrier startBarrier = new CyclicBarrier(threadCount + 1), stopBarrier = startBarrier;
@@ -55,11 +56,24 @@ class TestStmHistogram {
       startBarrier.await();
     } catch (Exception exn) {
     }
+
+    for (int i = 0; i < 200; i++) {
+      total.transferBins(histogram);
+      try {
+        Thread.sleep(30);
+      } catch (InterruptedException e) {
+      }
+    }
+
     try {
       stopBarrier.await();
     } catch (Exception exn) {
     }
+
+    System.out.println("histogram dump:");
     dump(histogram);
+    System.out.println("total dump:");
+    dump(total);
   }
 
   public static void dump(Histogram histogram) {
@@ -105,6 +119,9 @@ class StmHistogram implements Histogram {
 
   public StmHistogram(int span) {
     this.counts = new TxnInteger[span];
+    for (int i = 0; i < span; i++) {
+      this.counts[i] = newTxnInteger(0);
+    }
   }
 
   public void increment(int bin) {
@@ -141,7 +158,8 @@ class StmHistogram implements Histogram {
     atomic(() -> {
       int[] bins = hist.getBins();
       for (int currentBin = 0; currentBin < bins.length; currentBin++) {
-        this.counts[currentBin].increment(hist.getAndClear(currentBin));
+        int amount = hist.getAndClear(currentBin);
+        this.counts[currentBin].increment(amount);
       }
     });
   }

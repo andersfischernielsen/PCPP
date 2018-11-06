@@ -21,8 +21,6 @@ import org.multiverse.api.callables.TxnVoidCallable;
 import java.util.concurrent.Callable;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import com.sun.javafx.text.TextLine;
-
 import java.util.concurrent.CyclicBarrier;
 
 class TestStmHistogram {
@@ -34,30 +32,39 @@ class TestStmHistogram {
     final Histogram histogram = new StmHistogram(30);
     final int range = 4_000_000;
     final int threadCount = 10, perThread = range / threadCount;
-    final CyclicBarrier startBarrier = new CyclicBarrier(threadCount + 1), 
-      stopBarrier = startBarrier;
+    final CyclicBarrier startBarrier = new CyclicBarrier(threadCount + 1), stopBarrier = startBarrier;
     final Thread[] threads = new Thread[threadCount];
-    for (int t=0; t<threadCount; t++) {
-      final int from = perThread * t, 
-                  to = (t+1 == threadCount) ? range : perThread * (t+1); 
-        threads[t] = 
-          new Thread(() -> { 
-	      try { startBarrier.await(); } catch (Exception exn) { }
-	      for (int p=from; p<to; p++) 
-		histogram.increment(countFactors(p));
-	      System.out.print("*");
-	      try { stopBarrier.await(); } catch (Exception exn) { }
-	    });
-        threads[t].start();
+    for (int t = 0; t < threadCount; t++) {
+      final int from = perThread * t, to = (t + 1 == threadCount) ? range : perThread * (t + 1);
+      threads[t] = new Thread(() -> {
+        try {
+          startBarrier.await();
+        } catch (Exception exn) {
+        }
+        for (int p = from; p < to; p++)
+          histogram.increment(countFactors(p));
+        System.out.print("*");
+        try {
+          stopBarrier.await();
+        } catch (Exception exn) {
+        }
+      });
+      threads[t].start();
     }
-    try { startBarrier.await(); } catch (Exception exn) { }
-    try { stopBarrier.await(); } catch (Exception exn) { }
+    try {
+      startBarrier.await();
+    } catch (Exception exn) {
+    }
+    try {
+      stopBarrier.await();
+    } catch (Exception exn) {
+    }
     dump(histogram);
   }
 
   public static void dump(Histogram histogram) {
     int totalCount = 0;
-    for (int bin=0; bin<histogram.getSpan(); bin++) {
+    for (int bin = 0; bin < histogram.getSpan(); bin++) {
       System.out.printf("%4d: %9d%n", bin, histogram.getCount(bin));
       totalCount += histogram.getCount(bin);
     }
@@ -65,14 +72,14 @@ class TestStmHistogram {
   }
 
   public static int countFactors(int p) {
-    if (p < 2) 
+    if (p < 2)
       return 0;
     int factorCount = 1, k = 2;
     while (p >= k * k) {
       if (p % k == 0) {
         factorCount++;
         p /= k;
-      } else 
+      } else
         k++;
     }
     return factorCount;
@@ -81,10 +88,15 @@ class TestStmHistogram {
 
 interface Histogram {
   void increment(int bin);
+
   int getCount(int bin);
+
   int getSpan();
+
   int[] getBins();
+
   int getAndClear(int bin);
+
   void transferBins(Histogram hist);
 }
 
@@ -110,28 +122,27 @@ class StmHistogram implements Histogram {
   public int[] getBins() {
     return atomic(() -> {
       int[] bins = new int[counts.length];
-      for(int i = 0; i < counts.length; i++) {
-        bins[i] = counts.getCount(i);
+      for (int i = 0; i < counts.length; i++) {
+        bins[i] = this.getCount(i);
       }
-      return bins;});
+      return bins;
+    });
   }
 
   public int getAndClear(int bin) {
     return atomic(() -> {
-        int c = getCount(bin);
-        counts[bin] = 0;
-        return c;
-      }
-    );
+      int c = getCount(bin);
+      counts[bin] = newTxnInteger(0);
+      return c;
+    });
   }
 
   public void transferBins(Histogram hist) {
-    return atomic(() -> {
-      int[] bins = hist.getBins(); 
-      for(int currentBin; currentBin < bins.length; i++) {
+    atomic(() -> {
+      int[] bins = hist.getBins();
+      for (int currentBin = 0; currentBin < bins.length; currentBin++) {
         this.counts[currentBin].increment(hist.getAndClear(currentBin));
       }
     });
   }
 }
-

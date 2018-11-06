@@ -4,3 +4,5 @@
 ****
 Exercises and Projects for the Course *Practical Concurrent and Parallel Programming* at the IT University of Copenhagen.
 ****
+
+<img src="https://ubisafe.org/images/sombrero-svg.png" align="center" />
